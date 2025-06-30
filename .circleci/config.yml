@@ -32,5 +32,4 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - say-hello
-          context:
-          - ctx-ci
+          context: ctx-ci
