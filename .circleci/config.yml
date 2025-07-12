@@ -33,10 +33,9 @@ jobs:
     steps:
       - aws-cli/install
       - run:
-          name: Run AWS CLI
-          command: |
-            docker --version
-            aws --version
+          name: List of files in this Repo
+          command: ls -lhrt
+
 
 workflows:
   build:
