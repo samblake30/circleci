@@ -34,7 +34,9 @@ jobs:
       - aws-cli/install
       - run:
           name: Run AWS CLI
-          command: aws --version
+          command: |
+            docker --version
+            aws --version
 
 workflows:
   build:
