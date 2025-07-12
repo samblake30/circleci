@@ -7,7 +7,7 @@ executors:
   docker-build-exec:
     working_directory: /home/circleci/opt/project
     docker:
-      - image: circleci/python@3.1.0
+      - image: cimg/python:3.11
 
 commands:
   docker-build:
