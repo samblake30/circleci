@@ -39,7 +39,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - docker-build:
+      - build-main:
           context: ctx-ci
           filters:
             branches:
