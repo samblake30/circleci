@@ -5,9 +5,9 @@ orbs:
 
 executors:
   docker-build-exec:
-    - working_directory: /home/circleci/opt/project
-    - docker:
-        - image: circleci/python@3.1.0
+    working_directory: /home/circleci/opt/project
+    docker:
+      - image: circleci/python@3.1.0
 
 commands:
   docker-build:
@@ -45,4 +45,3 @@ workflows:
             branches:
               ignore:
                 - main
-
