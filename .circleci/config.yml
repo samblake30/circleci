@@ -97,14 +97,13 @@ jobs:
           image_name: "${IMAGE_NAME}"
           tag_name: "latest"
       - pr-comment:
-          body:
-            \"_**Automated update:**_ \
-            <summary>Docker Image 🐋</summary> \
-            
-            \`\`\`bash
+          body: |
+            _**Automated update:**_
+            <summary>Docker Image 🐋</summary>
+            ```bash
             $BUILT_IMAGE
-            \`\`\`
-            \"
+            ```
+      - run:
           name: Create workspace directory
           command: |
             mkdir -p workspace
