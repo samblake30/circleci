@@ -34,14 +34,6 @@ commands:
               echo "No Dockerfile found"
             fi
 
-  clean-docker-build:
-    description: "This safety step to cleanup the images"
-    steps:
-      - run:
-          name: Cleanup
-          command: |
-            docker rmi $IMAGE_NAME
-
 jobs:
   build-main:
     executor: docker-build-exec
@@ -88,8 +80,6 @@ jobs:
             -d "{\"body\": $(echo "$BODY" | jq -Rs .) }")
   
             echo "✅ Comment posted successfully to PR."
-
-      - clean-docker-build
 
 workflows:
   build:
