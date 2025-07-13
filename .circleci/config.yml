@@ -30,7 +30,6 @@ commands:
             else
               echo "No Dockerfile found"
             fi
-
 jobs:
   build-main:
     executor: docker-build-exec
@@ -41,7 +40,7 @@ jobs:
           name: Check files and get name for Docker Image
           command: |
             ls -lhrt
-            IMAGE_NAME=$(dirname .)
+            IMAGE_NAME=$(basename $(pwd))
             echo $IMAGE_NAME
       - docker-build:
           image_name: $IMAGE_NAME
