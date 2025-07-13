@@ -153,15 +153,7 @@ workflows:
             branches:
               ignore:
                 - main
-      - ecr-image-upload:
-          context: ctx-ci
-          requires:
-            - build-image
-          filters:
-            branches:
-              ignore:
-                - main
-      - cleanup:
+      - ecr-image_upload:
           context: ctx-ci
           requires:
             - build-image
