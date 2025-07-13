@@ -42,7 +42,12 @@ commands:
             # Fallback cleanup for older Docker API versions
             sleep 10
             echo $IMAGE_NAME
-            docker images $IMAGE_NAME -q  | xargs docker rmi -f
+            # Check if IMAGE_NAME exists before attempting removal
+            if [ ! -z "$IMAGE_NAME" ]; then
+                docker images $IMAGE_NAME -q | xargs -r docker rmi -f
+            else
+                echo "No image name provided for cleanup"
+            fi
 
 jobs:
   build-image:
