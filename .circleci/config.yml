@@ -98,8 +98,8 @@ jobs:
           tag_name: "latest"
       - pr-comment:
           body: |
-            \"_**Automated update:**_
-            <summary>Docker Image 🐋</summary>
+            \"_**Automated update:**_ \
+            <summary>Docker Image 🐋</summary> \
             ```bash
             $BUILT_IMAGE
             ```\"
