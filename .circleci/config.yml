@@ -24,6 +24,7 @@ commands:
       - run:
           name: Build Docker Image
           command: |
+            cd << parameters.image_name >>
             if [ -f Dockerfile ]; then
               docker build -t << parameters.image_name >> :<< parameters.tag_name >> .
               docker images
