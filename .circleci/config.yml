@@ -25,7 +25,11 @@ commands:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t << parameters.image_name >> :<< parameters.tag_name >> .
+            if [ -f Dockerfile ]; then
+              docker build -t << parameters.image_name >> :<< parameters.tag_name >> .
+            else
+              echo "No Dockerfile found"
+            fi
 
 jobs:
   build-main:
@@ -34,9 +38,14 @@ jobs:
       - checkout
       - aws-cli/install
       - run:
-          name: List of files in this Repo
-          command: ls -lhrt
-
+          name: Check files and get name for Docker Image
+          command: |
+            ls -lhrt
+            IMAGE_NAME=$(dirname .)
+            echo $IMAGE_NAME
+      - docker-build:
+          - image_name: $IMAGE_NAME
+          - tag_name: "latest"
 
 workflows:
   build:
