@@ -55,7 +55,7 @@ commands:
             pr_comment_url=$(echo "$pr_response" | jq -r ".[0]._links.comments.href")
             
             # Create comment body JSON
-            comment_body=$(echo '<< parameters.body >>' | jq -Rs .)
+            comment_body=$(echo "<< parameters.body >>" | jq -Rs .)
             
             # Post comment
             comment_response=$(curl -sSL -X POST "$pr_comment_url" \
