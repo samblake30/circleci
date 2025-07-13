@@ -101,7 +101,7 @@ jobs:
           tag_name: "latest"
       - pr-comment:
           body: |
-            _**Automated update:**_ \n
+            _**Automated update:**_
             Docker Image 🐋 \n
             \`\`\`bash
             $BUILT_IMAGE
