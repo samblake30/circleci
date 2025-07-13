@@ -125,9 +125,9 @@ jobs:
 
   ecr-image_upload:
     executor: docker-build-exec
-    attach_workspace:
-      at: workspace
     steps:
+      - attach_workspace:
+          at: workspace
       - aws-cli/setup
       - run:
           name: check AWS CLI and other details
