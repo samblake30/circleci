@@ -29,7 +29,7 @@ commands:
             if [ -f Dockerfile ]; then
               docker build -t << parameters.image_name >>:<< parameters.tag_name >> .
               BUILT_IMAGE=$(docker images << parameters.image_name >>:<< parameters.tag_name >>)
-              echo "BUILT_IMAGE=$BUILT_IMAGE" >>$BASH_ENV
+              echo "export BUILT_IMAGE=\"$BUILT_IMAGE\"" >> $BASH_ENV
             else
               echo "No Dockerfile found"
             fi
@@ -52,14 +52,27 @@ jobs:
       - docker-build:
           image_name: "${IMAGE_NAME}"
           tag_name: "latest"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .bash_env
 
   pr-comment:
     executor: docker-build-exec
     steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Load environment variables
+          command: |
+            if [ -f .bash_env ]; then
+              cat .bash_env >> $BASH_ENV
+              source $BASH_ENV
+            fi
       - run:
           name: Update the build status to Open PR
           command: |
-            echo "Posting details fo the built image to PR"
+            echo "Posting details for the built image to PR"
             
             pr_response=$(curl -L \
             -H "Accept: application/vnd.github+json" \
@@ -73,7 +86,7 @@ jobs:
             #Build the Markdown body with collapsible details
             BODY="Automated update: Built Docker Image details.
             <details>
-            <summary>🐋Docker Image</summary>
+            <summary>Docker Image 🐋</summary>
   
             \`\`\`bash
             $BUILT_IMAGE
