@@ -97,8 +97,7 @@ jobs:
           tag_name: "latest"
       - pr-comment:
           body: |
-            "#Build the Markdown body with collapsible details
-            BODY="_**Automated update:**_
+            "_**Automated update:**_
             <summary>Docker Image 🐋</summary>
             
             \`\`\`bash
