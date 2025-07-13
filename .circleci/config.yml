@@ -28,7 +28,7 @@ commands:
             cd << parameters.image_name >>
             if [ -f Dockerfile ]; then
               docker build -t << parameters.image_name >>:<< parameters.tag_name >> .
-              docker images
+              BUILT_IMAGE=$(docker images << parameters.image_name >>:<< parameters.tag_name >>)
             else
               echo "No Dockerfile found"
             fi
@@ -51,11 +51,53 @@ jobs:
           image_name: "${IMAGE_NAME}"
           tag_name: "latest"
 
+  pr-comment:
+    executor: docker-build-exec
+    steps:
+      - run:
+          name: Update the build status to Open PR
+          command: |
+            echo "Posting details fo the built image to PR"
+            
+            #Build the Markdown body with collapsible details
+            BODY="Automated update: Built Docker Image details.
+            <details>
+            <summary>🐋Docker Image</summary>
+  
+            \`\`\`bash
+            $BUILT_IMAGE
+            \`\`\`
+            </details>
+            "
+            
+            # Use file instead of inline body
+            comment_response=$(curl -sSL -X POST "$CI_PULL_REQUEST" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -d "{\"body\": $(echo "$BODY" | jq -Rs .) }")
+  
+            if [ "$comment_response" -ne 201 ]; then
+            echo "❌ Failed to post comment to PR. HTTP status: $comment_response"
+            cat comment_output.json
+            exit 1
+            fi
+  
+            echo "✅ Comment posted successfully to PR."
+
 workflows:
   build:
     jobs:
       - build-main:
           context: ctx-ci
+          filters:
+            branches:
+              ignore:
+                - main
+      - pr-comment:
+          context: ctx-ci
+          requires:
+            - build-main
           filters:
             branches:
               ignore:
