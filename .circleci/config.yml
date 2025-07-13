@@ -40,6 +40,7 @@ commands:
           name: Cleanup Images
           command: |
             # Fallback cleanup for older Docker API versions
+            sleep 10
             echo $IMAGE_NAME
             docker images $IMAGE_NAME -q  | xargs docker rmi -f
 
