@@ -21,7 +21,6 @@ commands:
         description: "Tha tag to use for build"
         default: "latest"
     steps:
-      - checkout
       - run:
           name: Build Docker Image
           command: |
