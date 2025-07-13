@@ -40,9 +40,8 @@ jobs:
           name: List changed files in PR
           command: |
             git fetch origin main
-            IMAGE_NAME=git diff --name-only origin/main...$CIRCLE_BRANCH | xargs -n1 dirname
+            IMAGE_NAME=$(git diff --name-only origin/main...$CIRCLE_BRANCH | xargs -n1 dirname)
             echo $IMAGE_NAME
-      - docker-build:
           image_name: $IMAGE_NAME
           tag_name: "latest"
 
