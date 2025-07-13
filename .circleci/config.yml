@@ -33,6 +33,35 @@ commands:
             else
               echo "No Dockerfile found"
             fi
+  pr-comment:
+    description: Comment on PR with necessary details
+    parameters:
+      body:
+        type: string
+        description: "Body of the PR to use"
+    steps:
+      - run:
+          name: Update the build status to Open PR
+          command: |
+            echo "Posting details for the built image to PR"
+            
+            pr_response=$(curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls)
+            
+            # Extract PR comment URL
+            pr_comment_url=$(echo "$pr_response" | jq -r ".[0]._links.comments.href")
+            
+            # Use file instead of inline body
+            comment_response=$(curl -sSL -X POST "$pr_comment_url" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            -d "{\"body\": $(echo "<< parameters.body >>" | jq -Rs .) }")
+            
+            echo "✅ Comment posted successfully to PR."
   cleanup:
     description: "Cleanup Images"
     steps:
@@ -66,6 +95,16 @@ jobs:
       - docker-build:
           image_name: "${IMAGE_NAME}"
           tag_name: "latest"
+      - pr-comment:
+          body: |
+            "#Build the Markdown body with collapsible details
+            BODY="_**Automated update:**_
+            <summary>Docker Image 🐋</summary>
+            
+            \`\`\`bash
+            $BUILT_IMAGE
+            \`\`\`
+            "
       - run:
           name: Create workspace directory
           command: |
@@ -75,53 +114,6 @@ jobs:
           root: workspace
           paths:
             - .bash_env
-
-  pr-comment:
-    executor: docker-build-exec
-    steps:
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - attach_workspace:
-          at: workspace
-      - run:
-          name: Load environment variables
-          command: |
-            if [ -f workspace/.bash_env ]; then
-              cat workspace/.bash_env >> $BASH_ENV
-              source $BASH_ENV
-            fi
-      - run:
-          name: Update the build status to Open PR
-          command: |
-            echo "Posting details for the built image to PR"
-            
-            pr_response=$(curl -L \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/pulls)
-            
-            # Extract PR comment URL
-            pr_comment_url=$(echo "$pr_response" | jq -r ".[0]._links.comments.href")
-            
-            #Build the Markdown body with collapsible details
-            BODY="_**Automated update:**_
-            <summary>Docker Image 🐋</summary>
-  
-            \`\`\`bash
-            $BUILT_IMAGE
-            \`\`\`
-            "
-            
-            # Use file instead of inline body
-            comment_response=$(curl -sSL -X POST "$pr_comment_url" \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            -d "{\"body\": $(echo "$BODY" | jq -Rs .) }")
-  
-            echo "✅ Comment posted successfully to PR."
-            
 
   ecr-image_upload:
     executor: docker-build-exec
@@ -152,14 +144,6 @@ workflows:
     jobs:
       - build-image:
           context: ctx-ci
-          filters:
-            branches:
-              ignore:
-                - main
-      - pr-comment:
-          context: ctx-ci
-          requires:
-            - build-image
           filters:
             branches:
               ignore:
