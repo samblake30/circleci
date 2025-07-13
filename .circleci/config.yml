@@ -59,7 +59,7 @@ commands:
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            -d "{\"body\": $(echo "<< parameters.body >>" | jq -Rs .) }")
+            -d "{\"body\": $(echo << parameters.body >> | jq -Rs .) }")
             
             echo "✅ Comment posted successfully to PR."
   cleanup:
@@ -98,11 +98,11 @@ jobs:
           tag_name: "latest"
       - pr-comment:
           body: |
-            _**Automated update:**_
+            "_**Automated update:**_
             <summary>Docker Image 🐋</summary>
             ```bash
             $BUILT_IMAGE
-            ```
+            ```"
       - run:
           name: Create workspace directory
           command: |
