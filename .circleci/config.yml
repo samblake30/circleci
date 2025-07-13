@@ -44,8 +44,8 @@ jobs:
             IMAGE_NAME=$(dirname .)
             echo $IMAGE_NAME
       - docker-build:
-          - image_name: $IMAGE_NAME
-          - tag_name: "latest"
+          image_name: $IMAGE_NAME
+          tag_name: "latest"
 
 workflows:
   build:
