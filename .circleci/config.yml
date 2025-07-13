@@ -29,9 +29,11 @@ commands:
             if [ -f Dockerfile ]; then
               docker build -t << parameters.image_name >>:<< parameters.tag_name >> .
               BUILT_IMAGE=$(docker images << parameters.image_name >>:<< parameters.tag_name >>)
+              echo "BUILT_IMAGE=$BUILT_IMAGE" >>$BASH_ENV
             else
               echo "No Dockerfile found"
             fi
+
   clean-docker-build:
     description: "This safety step to cleanup the images"
     steps:
@@ -85,10 +87,12 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -d "{\"body\": $(echo "$BODY" | jq -Rs .) }")
   
-            if [ "$comment_response" -ne 201 ]; then
-            echo "❌ Failed to post comment to PR. HTTP status: $comment_response"
-            cat comment_output.json
-            exit 1
+            # Fix integer comparison by extracting status code
+            status_code=$(echo "$comment_response" | jq -r '.status // empty')
+            if [ -n "$status_code" ] && [ "$status_code" -ne 201 ]; then
+              echo "❌ Failed to post comment to PR. HTTP status: $status_code"
+              echo "$comment_response" | jq '.'
+              exit 1
             fi
   
             echo "✅ Comment posted successfully to PR."
