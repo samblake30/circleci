@@ -135,6 +135,10 @@ jobs:
             aws sts get-caller-identity
             aws configure list
             aws ecr describe-repositories
+      - run:
+          name: Create/check Repository
+          command: |
+            aws ecr describe-repositories --repository-names $IMAGE_NAME || aws ecr create-repository --repository-name $IMAGE_NAME
 
 workflows:
   build:
