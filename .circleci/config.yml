@@ -8,6 +8,7 @@ executors:
     working_directory: /home/circleci/opt/project
     docker:
       - image: cimg/python:3.11
+    resource_class: medium
 
 commands:
   docker-build:
@@ -26,7 +27,7 @@ commands:
           command: |
             cd << parameters.image_name >>
             if [ -f Dockerfile ]; then
-              docker build -t << parameters.image_name >> :<< parameters.tag_name >> .
+              docker build -t << parameters.image_name >>:<< parameters.tag_name >> .
               docker images
             else
               echo "No Dockerfile found"
@@ -36,15 +37,18 @@ jobs:
     executor: docker-build-exec
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
       - aws-cli/install
       - run:
           name: List changed files in PR
           command: |
             git fetch origin main
-            IMAGE_NAME=$(git diff --name-only origin/main...$CIRCLE_BRANCH | xargs -n1 dirname)
+            IMAGE_NAME=$(git diff --name-only origin/main...$CIRCLE_BRANCH | xargs -n1 dirname | head -1)
+            echo "export IMAGE_NAME=$IMAGE_NAME" >> $BASH_ENV
             echo $IMAGE_NAME
       - docker-build:
-          image_name: $IMAGE_NAME
+          image_name: "${IMAGE_NAME}"
           tag_name: "latest"
 
 workflows:
