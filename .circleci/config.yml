@@ -41,7 +41,7 @@ commands:
           command: |
             # Fallback cleanup for older Docker API versions
             echo $IMAGE_NAME
-            docker images $(docker images $IMAGE_NAME ) -q  | xargs docker rmi -f
+            docker images $IMAGE_NAME -q  | xargs docker rmi -f
 
 jobs:
   build-image:
@@ -101,13 +101,11 @@ jobs:
             
             #Build the Markdown body with collapsible details
             BODY="_**Automated update:**_ Image details.
-            <details>
             <summary>Docker Image 🐋</summary>
   
             \`\`\`bash
             $BUILT_IMAGE
             \`\`\`
-            </details>
             "
             
             # Use file instead of inline body
