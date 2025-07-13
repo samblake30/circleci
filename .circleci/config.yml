@@ -78,6 +78,7 @@ commands:
                 echo "No image name provided for cleanup"
             fi
 
+
 jobs:
   build-image:
     executor: docker-build-exec
@@ -96,7 +97,7 @@ jobs:
           image_name: "${IMAGE_NAME}"
           tag_name: "latest"
       - pr-comment:
-          body: |
+          body:
             "_**Automated update:**_ \
             <summary>Docker Image 🐋</summary> \
             
