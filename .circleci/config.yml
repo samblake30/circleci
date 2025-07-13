@@ -102,7 +102,7 @@ jobs:
       - pr-comment:
           body: |
             _**Automated update:**_
-            Docker Image  <img src="https://play-lh.googleusercontent.com/7awBtIhiSNlGBsgbcRAJyhLyz-oaPYJycBT1pti6x-vBx0xM16HjIZZzWUB_3u8x7g=w240-h480-rw" width="20" height="20" alt="Docker Logo"/>
+            🐳Docker Image 
             \`\`\`bash
             $BUILT_IMAGE
             \`\`\`
