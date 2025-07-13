@@ -52,8 +52,13 @@ jobs:
       - docker-build:
           image_name: "${IMAGE_NAME}"
           tag_name: "latest"
+      - run:
+          name: Create workspace directory
+          command: |
+            mkdir -p workspace
+            cp $BASH_ENV workspace/.bash_env
       - persist_to_workspace:
-          root: .
+          root: workspace
           paths:
             - .bash_env
 
@@ -61,12 +66,12 @@ jobs:
     executor: docker-build-exec
     steps:
       - attach_workspace:
-          at: .
+          at: workspace
       - run:
           name: Load environment variables
           command: |
-            if [ -f .bash_env ]; then
-              cat .bash_env >> $BASH_ENV
+            if [ -f workspace/.bash_env ]; then
+              cat workspace/.bash_env >> $BASH_ENV
               source $BASH_ENV
             fi
       - run:
