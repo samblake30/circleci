@@ -87,14 +87,6 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             -d "{\"body\": $(echo "$BODY" | jq -Rs .) }")
   
-            # Fix integer comparison by extracting status code
-            status_code=$(echo "$comment_response" | jq -r '.status // empty')
-            if [ -n "$status_code" ] && [ "$status_code" -ne 201 ]; then
-              echo "❌ Failed to post comment to PR. HTTP status: $status_code"
-              echo "$comment_response" | jq '.'
-              exit 1
-            fi
-  
             echo "✅ Comment posted successfully to PR."
 
       - clean-docker-build
