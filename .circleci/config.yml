@@ -54,12 +54,15 @@ commands:
             # Extract PR comment URL
             pr_comment_url=$(echo "$pr_response" | jq -r ".[0]._links.comments.href")
             
-            # Use file instead of inline body
+            # Create comment body JSON
+            comment_body=$(echo "<< parameters.body >>" | jq -Rs .)
+            
+            # Post comment
             comment_response=$(curl -sSL -X POST "$pr_comment_url" \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            -d "{\"body\": $(echo << parameters.body >> | jq -Rs .) }")
+            -d "{\"body\": $comment_body}")
             
             echo "✅ Comment posted successfully to PR."
   cleanup:
