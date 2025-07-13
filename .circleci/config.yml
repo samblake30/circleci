@@ -41,7 +41,7 @@ commands:
           command: |
             # Fallback cleanup for older Docker API versions
             echo $IMAGE_NAME
-            docker images -q | grep $IMAGE_NAME | xargs -r docker rmi
+            docker images $(docker images $IMAGE_NAME ) -q  | xargs docker rmi -f
 
 jobs:
   build-main:
