@@ -100,7 +100,7 @@ jobs:
             pr_comment_url=$(echo "$pr_response" | jq -r ".[0]._links.comments.href")
             
             #Build the Markdown body with collapsible details
-            BODY="_**Automated update:**_ Image details.
+            BODY="_**Automated update:**_
             <summary>Docker Image 🐋</summary>
   
             \`\`\`bash
