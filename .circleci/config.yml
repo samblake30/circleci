@@ -27,6 +27,7 @@ commands:
           command: |
             if [ -f Dockerfile ]; then
               docker build -t << parameters.image_name >> :<< parameters.tag_name >> .
+              docker images
             else
               echo "No Dockerfile found"
             fi
@@ -42,6 +43,7 @@ jobs:
             git fetch origin main
             IMAGE_NAME=$(git diff --name-only origin/main...$CIRCLE_BRANCH | xargs -n1 dirname)
             echo $IMAGE_NAME
+      - docker-build:
           image_name: $IMAGE_NAME
           tag_name: "latest"
 
