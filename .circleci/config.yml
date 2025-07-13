@@ -100,11 +100,11 @@ jobs:
           image_name: "${IMAGE_NAME}"
           tag_name: "latest"
       - pr-comment:
-          body: \"_**Automated update:**_ \
+          body: _**Automated update:**_ \
             Docker Image 🐋 \
             \`\`\`bash
             $BUILT_IMAGE
-            \`\`\`\"
+            \`\`\`
       - run:
           name: Create workspace directory
           command: |
