@@ -102,7 +102,7 @@ jobs:
       - pr-comment:
           body: |
             _**Automated update:**_
-            🐳Docker Image 
+            🐳 Docker Image 
             \`\`\`bash
             $BUILT_IMAGE
             \`\`\`
