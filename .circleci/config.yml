@@ -44,7 +44,7 @@ commands:
             docker images $(docker images $IMAGE_NAME ) -q  | xargs docker rmi -f
 
 jobs:
-  build-main:
+  build-image:
     executor: docker-build-exec
     steps:
       - checkout
@@ -123,7 +123,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - build-main:
+      - build-image:
           context: ctx-ci
           filters:
             branches:
@@ -132,7 +132,7 @@ workflows:
       - pr-comment:
           context: ctx-ci
           requires:
-            - build-main
+            - build-image
           filters:
             branches:
               ignore:
