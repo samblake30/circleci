@@ -38,7 +38,7 @@ commands:
       - run:
           name: Cleanup
           command: |
-            docker system prune -a -f
+            docker rmi $IMAGE_NAME
 
 jobs:
   build-main:
