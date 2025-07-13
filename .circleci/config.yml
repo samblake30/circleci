@@ -103,9 +103,9 @@ jobs:
           body: |
             _**Automated update:**_
             <summary>Docker Image 🐋</summary>
-            ```bash
+            \`\`\`bash
             $BUILT_IMAGE
-            ```
+            \`\`\`
       - run:
           name: Create workspace directory
           command: |
