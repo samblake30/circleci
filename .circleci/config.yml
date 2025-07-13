@@ -33,6 +33,13 @@ commands:
             else
               echo "No Dockerfile found"
             fi
+  cleanup:
+    description: "Cleanup Images"
+    steps:
+      - run:
+          name: Cleanup Images
+          command: |
+            docker image prune -f
 
 jobs:
   build-main:
@@ -107,6 +114,7 @@ jobs:
             -d "{\"body\": $(echo "$BODY" | jq -Rs .) }")
   
             echo "✅ Comment posted successfully to PR."
+      - cleanup
 
 workflows:
   build:
