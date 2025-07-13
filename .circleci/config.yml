@@ -37,10 +37,10 @@ jobs:
       - checkout
       - aws-cli/install
       - run:
-          name: Check files and get name for Docker Image
+          name: List changed files in PR
           command: |
-            ls -lhrt
-            IMAGE_NAME=$(basename $(pwd))
+            git fetch origin main
+            IMAGE_NAME=git diff --name-only origin/main...$CIRCLE_BRANCH | xargs -n1 dirname
             echo $IMAGE_NAME
       - docker-build:
           image_name: $IMAGE_NAME
