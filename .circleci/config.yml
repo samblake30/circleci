@@ -39,7 +39,8 @@ commands:
       - run:
           name: Cleanup Images
           command: |
-            docker image prune -f
+            # Fallback cleanup for older Docker API versions
+            docker images -q | xargs -r docker rmi
 
 jobs:
   build-main:
