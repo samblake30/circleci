@@ -32,6 +32,14 @@ commands:
             else
               echo "No Dockerfile found"
             fi
+  clean-docker-build:
+    description: "This safety step to cleanup the images"
+    steps:
+      - run:
+          name: Cleanup
+          command: |
+            docker system prune -a -f
+
 jobs:
   build-main:
     executor: docker-build-exec
@@ -84,6 +92,8 @@ jobs:
             fi
   
             echo "✅ Comment posted successfully to PR."
+
+      - clean-docker-build
 
 workflows:
   build:
