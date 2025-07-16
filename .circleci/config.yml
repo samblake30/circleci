@@ -150,6 +150,7 @@ jobs:
             docker tag $IMAGE_NAME:latest 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_NAME:latest
             docker push 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_NAME:latest
             export PUSHED_IMAGE=$(aws ecr list-images --repository-name $IMAGE_NAME) >>$BASH_ENV
+            echo $PUSHED_IMAGE
       - pr-comment:
           body: |
             _**Pushed image to ECR**_
