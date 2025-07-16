@@ -144,8 +144,8 @@ jobs:
       - run:
           name: Push the Image to ECR
           command: |
-            docker tag $IMAGE_NAME:latest 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_IMAGE:latest
-            docker push 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_IMAGE:latest
+            docker tag $IMAGE_NAME:latest 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_NAME:latest
+            docker push 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_NAME:latest
 
 workflows:
   build:
