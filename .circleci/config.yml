@@ -121,6 +121,8 @@ jobs:
     steps:
       - attach_workspace:
           at: workspace
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Load environment variables
           command: |
@@ -139,6 +141,11 @@ jobs:
           name: Create/check Repository
           command: |
             aws ecr describe-repositories --repository-names $IMAGE_NAME || aws ecr create-repository --repository-name $IMAGE_NAME
+      - run:
+          name: Push the Image to ECR
+          command: |
+            docker tag $IMAGE_NAME:latest 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_IMAGE:latest
+            docker push 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_IMAGE:latest
 
 workflows:
   build:
