@@ -149,7 +149,9 @@ jobs:
             aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 322994608675.dkr.ecr.ap-south-1.amazonaws.com
             docker tag $IMAGE_NAME:latest 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_NAME:latest
             docker push 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_NAME:latest
-            export PUSHED_IMAGE=$(aws ecr list-images --repository-name $IMAGE_NAME) >>$BASH_ENV
+            PUSHED_IMAGE=$(aws ecr list-images --repository-name $IMAGE_NAME)
+            echo "export PUSHED_IMAGE=\"$PUSHED_IMAGE\"" >> $BASH_ENV
+            source $BASH_ENV
             echo $PUSHED_IMAGE
       - pr-comment:
           body: |
