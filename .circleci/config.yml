@@ -151,8 +151,6 @@ jobs:
             docker push 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_NAME:latest
             PUSHED_IMAGE=$(aws ecr list-images --repository-name $IMAGE_NAME)
             echo "export PUSHED_IMAGE=\"$PUSHED_IMAGE\"" >> $BASH_ENV
-            source $BASH_ENV
-            echo $PUSHED_IMAGE
       - pr-comment:
           body: |
             _**Pushed image to ECR**_
