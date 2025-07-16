@@ -145,6 +145,7 @@ jobs:
       - run:
           name: Push the Image to ECR
           command: |
+            aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 322994608675.dkr.ecr.ap-south-1.amazonaws.com
             docker tag $IMAGE_NAME:latest 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_NAME:latest
             docker push 322994608675.dkr.ecr.ap-south-1.amazonaws.com/$IMAGE_NAME:latest
       - pr-comment:
