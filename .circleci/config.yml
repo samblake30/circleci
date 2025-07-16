@@ -131,6 +131,7 @@ jobs:
               source $BASH_ENV
             fi
       - aws-cli/setup:
+          role_arn: '${AWS_CCI_ROLE_ARN}'
           disable_aws_pager: false
       - run:
           name: check AWS CLI and other details
