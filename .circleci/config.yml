@@ -130,6 +130,10 @@ jobs:
               cat workspace/.bash_env >> $BASH_ENV
               source $BASH_ENV
             fi
+      - run:
+         name: Check for the Docker Images
+         command: |
+           docker images
       - aws-cli/setup:
           role_arn: '${AWS_CCI_ROLE_ARN}'
           disable_aws_pager: false
