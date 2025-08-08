@@ -30,6 +30,8 @@ commands:
               docker build -t << parameters.image_name >>:<< parameters.tag_name >> .
               BUILT_IMAGE=$(docker images << parameters.image_name >>:<< parameters.tag_name >>)
               echo "export BUILT_IMAGE=\"$BUILT_IMAGE\"" >> $BASH_ENV
+              # Save docker image to workspace
+              docker save << parameters.image_name >>:<< parameters.tag_name >> > /tmp/docker-image.tar
             else
               echo "No Dockerfile found"
             fi
@@ -111,10 +113,13 @@ jobs:
           command: |
             mkdir -p workspace
             cp $BASH_ENV workspace/.bash_env
+            # Copy docker image tar to workspace
+            cp /tmp/docker-image.tar workspace/
       - persist_to_workspace:
           root: workspace
           paths:
             - .bash_env
+            - docker-image.tar
 
   ecr-image_upload:
     executor: docker-build-exec
@@ -130,6 +135,10 @@ jobs:
               cat workspace/.bash_env >> $BASH_ENV
               source $BASH_ENV
             fi
+      - run:
+          name: Load Docker image
+          command: |
+            docker load < workspace/docker-image.tar
       - run:
          name: Check for the Docker Images
          command: |
